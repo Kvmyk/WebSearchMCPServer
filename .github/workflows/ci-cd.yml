@@ -8,8 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  DOCKER_IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/web-search-mcp
 
 jobs:
   test:
@@ -82,7 +81,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.DOCKER_IMAGE_NAME }}
+          images: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/web-search-mcp
           tags: |
             type=ref,event=branch
             type=sha,prefix={{branch}}-
