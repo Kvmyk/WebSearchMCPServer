@@ -90,6 +90,4 @@ pytest tests/ -v
 ## Licencja
 
 Ten projekt jest dostępny na licencji MIT License. Zobacz plik [LICENSE](LICENSE) dla szczegółów.
-
-
-
+test
