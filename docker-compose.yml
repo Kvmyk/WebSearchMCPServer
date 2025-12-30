@@ -1,0 +1,10 @@
+services:
+  web-search-mcp:
+    build: .
+    image: web-search-mcp:latest
+    container_name: web-search-mcp
+    ports:
+      - "8000:8000"
+    restart: always
+    environment:
+      - LOG_LEVEL=INFO
