@@ -1,43 +1,93 @@
 # Web Search MCP Server
 
-A local Model Context Protocol (MCP) server that provides web search capabilities using [DuckDuckGo](https://pypi.org/project/duckduckgo-search/). Designed to run via Docker and integrate with [LM Studio](https://lmstudio.ai/).
+Lokalny serwer Model Context Protocol (MCP) zapewniający możliwości wyszukiwania w sieci przy użyciu DuckDuckGo oraz ekstrakcji treści ze stron internetowych. Zaprojektowany do pracy z [LM Studio](https://lmstudio.ai/) i innymi klientami MCP.
 
-## Features
-- **Free**: Uses DuckDuckGo (no API keys required).
-- **Private**: Runs locally on your machine.
-- **Automatic**: Starts efficiently with Docker Desktop.
-- **Standard**: Uses Server-Sent Events (SSE) for MCP communication.
+## Funkcje
+- **Darmowy**: Używa DuckDuckGo (bez wymaganych kluczy API)
+- **Prywatny**: Działa lokalnie na Twoim komputerze
+- **Automatyczny**: Łatwe uruchomienie z Docker
+- **Standardowy**: Używa Server-Sent Events (SSE) dla komunikacji MCP
+- **Ekstrakcja treści**: Automatycznie wyciąga główną treść ze stron internetowych za pomocą trafilatura
 
-## Prerequisites
-- Docker Desktop installed.
+## Instalacja
 
-## Installation & Usage
+### Metoda 1: Obraz z Docker Hub (Zalecana)
 
-1. **Build and Start**:
-   Open a terminal in this directory and run:
+Pobierz i uruchom gotowy obraz z Docker Hub:
+
+```bash
+docker run -d -p 8000:8000 --name web_search_mcp kuba7331/web-search-mcp
+```
+
+**Sprawdź logi**:
+```bash
+docker logs web_search_mcp
+```
+
+### Metoda 2: Klonowanie i Uruchomienie Ręczne
+
+1. **Sklonuj repozytorium**:
+   ```bash
+   git clone https://github.com/Kvmyk/WebSearchMCPServer.git
+   cd WebSearchMCPServer
+   ```
+
+2. **Uruchom z Docker Compose**:
    ```bash
    docker-compose up -d
    ```
-   This will build the image and start the container in the background. It will automatically restart if Docker restarts.
 
-2. **Connect LM Studio**:
-   - Open LM Studio.
-   - Go to the **MCP (Model Context Protocol)** section (usually under connections or developer settings).
-   - Add a new MCP Server:
-     - **Name**: Web Search
-     - **Type**: SSE (HTTP)
-     - **URL**: `http://localhost:8000/sse`
-   - LM Studio should connect and list `search_web` as an available tool.
-
-## Technical Details
-- **Port**: 8000
-- **Transport**: SSE
-- **Tech Stack**: Python 3.12, FastAPI, MCP SDK, DuckDuckGo Search.
-
-## Troubleshooting
-If the server doesn't start or LM Studio can't connect:
-1. Check logs:
+3. **Sprawdź logi**:
    ```bash
    docker logs web-search-mcp
    ```
-2. Verify port 8000 is free on your host.
+
+## Połączenie z LM Studio
+
+Po uruchomieniu serwera:
+
+1. Otwórz **LM Studio**
+2. Przejdź do sekcji **MCP (Model Context Protocol)** (zazwyczaj w ustawieniach lub zakładce connections/developer)
+3. Dodaj nowy serwer MCP:
+   - **Name**: `Web Search`
+   - **Type**: `SSE (HTTP)`
+   - **URL**: `http://localhost:8000/sse`
+4. Kliknij **Connect**
+
+LM Studio powinno się połączyć i wyświetlić narzędzie `search_web` jako dostępne.
+
+## Testowanie
+
+Projekt zawiera kompleksowy zestaw testów jednostkowych i integracyjnych.
+
+**Uruchom wszystkie testy**:
+```bash
+pip install -r requirements.txt
+pip install -r tests/requirements-test.txt
+pytest tests/ -v
+```
+
+**Struktura testów**:
+- `tests/test_server.py` - Testy funkcjonalności serwera MCP
+- `tests/test_search.py` - Testy wyszukiwania i parsowania wyników DuckDuckGo
+- `tests/test_content_extraction.py` - Testy ekstrakcji treści trafilatura/BeautifulSoup
+
+## Szczegóły Techniczne
+
+- **Port**: 8000
+- **Transport**: SSE (Server-Sent Events)
+- **Stos technologiczny**: 
+  - Python 3.12
+  - MCP SDK
+  - DuckDuckGo HTML scraping
+  - trafilatura (ekstrakcja treści)
+  - BeautifulSoup4 (parsing HTML)
+  - httpx (HTTP client)
+  - uvicorn (ASGI server)
+
+## Licencja
+
+Ten projekt jest dostępny na licencji MIT License. Zobacz plik [LICENSE](LICENSE) dla szczegółów.
+
+
+
