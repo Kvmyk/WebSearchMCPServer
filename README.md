@@ -1,5 +1,7 @@
 # Web Search MCP Server
 
+![CI/CD Status](https://github.com/Kvmyk/WebSearchMCPServer/actions/workflows/ci-cd.yml/badge.svg)
+
 Lokalny serwer Model Context Protocol (MCP) zapewniający możliwości wyszukiwania w sieci przy użyciu DuckDuckGo oraz ekstrakcji treści ze stron internetowych. Zaprojektowany do pracy z [LM Studio](https://lmstudio.ai/) i innymi klientami MCP.
 
 ## Funkcje
@@ -84,6 +86,42 @@ pytest tests/ -v
   - BeautifulSoup4 (parsing HTML)
   - httpx (HTTP client)
   - uvicorn (ASGI server)
+
+## CI/CD
+
+Projekt wykorzystuje **GitHub Actions** do automatycznego testowania i publikowania obrazów Docker.
+
+### Workflow
+
+**Automatyczne uruchamianie**:
+- ✅ **Testy** - uruchamiane przy każdym push i PR do gałęzi `main`
+- 🐋 **Build & Push** - obraz Docker publikowany do Docker Hub po przejściu testów (tylko na `main`)
+
+**Tagi obrazów**:
+- `latest` - najnowsza wersja z gałęzi głównej
+- `main-<sha>` - obraz ztagowany commit SHA
+- `v1.0.0`, `1.0` - automatyczne tagowanie przy release (semver)
+
+### Konfiguracja dla Maintainerów
+
+Aby workflow działał, musisz dodać następujące **sekrety** w ustawieniach repozytorium GitHub:
+
+1. Przejdź do **Settings** → **Secrets and variables** → **Actions**
+2. Dodaj następujące sekrety:
+   - `DOCKERHUB_USERNAME` - Twoja nazwa użytkownika Docker Hub
+   - `DOCKERHUB_TOKEN` - Token dostępu Docker Hub (nie hasło!)
+
+**Jak wygenerować Docker Hub token**:
+1. Zaloguj się do [Docker Hub](https://hub.docker.com/)
+2. Przejdź do **Account Settings** → **Security** → **New Access Token**
+3. Nadaj nazwę (np. `github-actions`) i skopiuj wygenerowany token
+4. Użyj tego tokena jako wartość `DOCKERHUB_TOKEN`
+
+**Workflow wspiera**:
+- Multi-platform builds (linux/amd64, linux/arm64)
+- Build cache dla szybszych kompilacji
+- Automatyczne tagowanie oparte na Git
+
 
 ## Licencja
 
